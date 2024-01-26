@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     filmContainers.forEach(function(container) {
         container.addEventListener('click', function() {
-            var url = this.getAttribute('data-href');
-            window.location.href = url; // Перехід на вказану сторінку
+            var filmId = this.getAttribute('filmid');
+            var url = this.getAttribute('data-href') + '?filmid=' + filmId;
+            window.location.href = url; // Перехід на вказану сторінку з filmid
         });
     });
 });
@@ -13,38 +14,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function readCSV(url, containerId) {
-    // Use a CORS proxy
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const targetUrl = url;
-
-    fetch(proxyUrl + targetUrl)
+    fetch(url)
         .then(response => response.text())
         .then(csvText => {
             createFilmContainers(csvText, containerId);
         })
-        .catch(error => console.error('Error fetching the file:', error));
+        .catch(error => console.error('Помилка при завантаженні файлу:', error));
 }
 
 function createFilmContainers(csvText, containerId) {
     const films = csvText.split('\n');
     films.forEach(film => {
-        const [imgLink, name] = film.split(',');
-        if (imgLink && name) {
-            const filmContainer = document.createElement('div');
+        const [imgLink, name, filmid] = film.split(',');
+        if (imgLink && name && filmid) {
+            const filmContainer = document.createElement('button');
             filmContainer.className = 'film-container';
+            filmContainer.setAttribute('data-href', 'filmpage.html');
+            filmContainer.setAttribute('filmid', filmid.trim());
             filmContainer.innerHTML = `
                 <img src="${imgLink.trim()}" alt="${name.trim()}">
                 <p>${name.trim()}</p>
             `;
+
+            // Додавання обробника подій тут
+            filmContainer.addEventListener('click', function() {
+                window.location.href = this.getAttribute('data-href');
+            });
+
             document.getElementById(containerId).appendChild(filmContainer);
         }
     });
 }
 
 // Масив об'єктів з файлами та контейнерами
-const filesToLoad = [
-    { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjZ7KrdfdJRSyFn80VrMS4su4n7k80s5kjx1A0hbEKL7pDQzUID2OQiWbrXmxTtfikHFr43v3lKFFj/pub?output=csv', containerId: 'films-container' },
-   // { url: 'https://drive.google.com/uc?id=YOUR_CARTOON_FILE_ID', containerId: 'cartoons-container' }
-];
-
-filesToLoad.forEach(fileInfo => readCSV(fileInfo));
+const rawGitHubUrl = 'https://raw.githubusercontent.com/Posty322/movie/main/film.csv';
+readCSV(rawGitHubUrl, 'films-container');
