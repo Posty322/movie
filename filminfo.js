@@ -23,8 +23,10 @@ function parseCSV(csvText, filmId) {
         if (data[0].trim() === filmId) {
             return {
                 id: data[0].trim(),
-                name: data[1].trim(),
-                description: data[2].trim(),
+                title: data[1].trim(),
+                country: data[3].trim(),
+                production: data[4].trim(),
+                scriptwriter: data[5].trim(),
                 // інші поля...
             };
         }
