@@ -1,14 +1,58 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var filmContainers = document.querySelectorAll('.film-container');
-
-    filmContainers.forEach(function(container) {
-        container.addEventListener('click', function() {
-            var filmId = this.getAttribute('filmid');
-            var url = this.getAttribute('data-href') + '?filmid=' + filmId;
-            window.location.href = url; // Перехід на вказану сторінку з filmid
-        });
+document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll(".film-container");
+  
+    buttons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        const id = button.getAttribute("data-href");
+  
+        // Завантажуємо CSV файл
+        fetch("https://raw.githubusercontent.com/Posty322/movie/main/filminfo.csv")
+          .then(response => response.text())
+          .then(data => {
+            // Розділяємо CSV рядки
+            const lines = data.split("\n");
+  
+            // Шукаємо дані для заданого id
+            let movieData;
+            for (const line of lines) {
+              const fields = line.split(",");
+              if (fields[0] === id) {
+                movieData = fields;
+                break;
+              }
+            }
+  
+            if (movieData) {
+              // Відображаємо дані на сторінці filmpage.html
+              const h1 = document.createElement("h1");
+              h1.textContent = `${movieData[1]} (${id})`;
+  
+              const genre = document.createElement("p");
+              genre.innerHTML = `<span class="large-text">Жанр:</span> <span class="medium-text">${movieData[2]}</span>`;
+  
+              const country = document.createElement("p");
+              country.innerHTML = `<span class="large-text">Країна:</span> <span class="medium-text">${movieData[3]}</span>`;
+  
+              // Додавайте інші дані за потребою
+  
+              // Очищаємо контент сторінки filmpage.html
+              const filmpage = document.getElementById("filmpage");
+              filmpage.innerHTML = "";
+  
+              // Додаємо створені елементи на сторінку
+              filmpage.appendChild(h1);
+              filmpage.appendChild(genre);
+              filmpage.appendChild(country);
+            } else {
+              alert("Фільм не знайдено!");
+            }
+          })
+          .catch(error => {
+            console.error("Помилка під час завантаження файлу:", error);
+          });
+      });
     });
-});
+  });
 
 
 
@@ -29,7 +73,7 @@ function createFilmContainers(csvText, containerId) {
         if (imgLink && name && filmid) {
             const filmContainer = document.createElement('button');
             filmContainer.className = 'film-container';
-            filmContainer.setAttribute('data-href', 'filmpage.html');
+            filmContainer.setAttribute('data-href', `filmpage.html?id=id${filmid.trim()}`);
             filmContainer.setAttribute('filmid', filmid.trim());
             filmContainer.innerHTML = `
                 <img src="${imgLink.trim()}" alt="${name.trim()}">

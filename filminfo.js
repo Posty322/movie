@@ -1,52 +1,31 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Отримання filmid з URL
+document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const filmId = urlParams.get('filmid'); 
+    const id = urlParams.get("id");
 
-    fetch('path_to_your_filminfo.csv')
+    fetch("https://raw.githubusercontent.com/Posty322/movie/main/filminfo.csv")
         .then(response => response.text())
-        .then(csvText => {
-            const filmData = parseCSV(csvText, filmId);
-            if (filmData) {
-                displayFilmData(filmData);
+        .then(data => {
+            const lines = data.split("\n");
+            let movieData;
+
+            for (const line of lines) {
+                const fields = line.split(",");
+                if (fields[0] === id) {
+                    movieData = fields;
+                    break;
+                }
+            }
+
+            if (movieData) {
+                document.getElementById("movieTitle").textContent = `${movieData[1]}`;
+                document.getElementById("genre").textContent = `${movieData[2]}`;
+                document.getElementById("country").textContent = `Країна: ${movieData[3]}`;
+                // Додайте інші поля за потребою
             } else {
-                console.error('Фільм не знайдено.');
+                alert("Фільм не знайдено!");
             }
         })
-        .catch(error => console.error('Помилка при завантаженні файлу:', error));
+        .catch(error => {
+            console.error("Помилка під час завантаження файлу:", error);
+        });
 });
-
-function parseCSV(csvText, filmId) {
-    const lines = csvText.split('\n');
-    for (let line of lines) {
-        const data = line.split(',');
-        if (data[0].trim() === filmId) {
-            return {
-                id: data[0].trim(),
-                title: data[1].trim(),
-                country: data[3].trim(),
-                production: data[4].trim(),
-                scriptwriter: data[5].trim(),
-                // інші поля...
-            };
-        }
-    }
-    return null;
-}
-
-function displayFilmData(filmData) {
-    document.querySelector('.film-info h1').textContent = filmData.title;
-
-    // Заповнюємо відповідні span елементи
-    const genreSpan = document.querySelector('.film-info p span.medium-text:nth-child(2)');
-    const countrySpan = document.querySelector('.film-info p span.medium-text:nth-child(4)');
-    const productionSpan = document.querySelector('.film-info p span.medium-text:nth-child(6)');
-    const scriptwriterSpan = document.querySelector('.film-info p span.medium-text:nth-child(8)');
-    
-    if (genreSpan) genreSpan.textContent = filmData.genre;
-    if (countrySpan) countrySpan.textContent = filmData.country;
-    if (productionSpan) productionSpan.textContent = filmData.production;
-    if (scriptwriterSpan) scriptwriterSpan.textContent = filmData.scriptwriter;
-    // Встановлення інших полів...
-}
-
