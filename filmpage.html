@@ -4,6 +4,7 @@
     <title>Пример модального окна</title>
     <link rel="stylesheet" type="text/css" href="filmpage.css">
     <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webtorrent/0.105.3/webtorrent.min.js"></script>
     <script src="filminfo.js"></script>
 </head>
 <header class="primary-header content-grid">
@@ -42,21 +43,16 @@
             </p>
             <p> 
                 <span class="large-text"> Країна: </span>
-                <span class="medium-text"></span>
+                <span class="medium-text" id="country"></span>
             </p>
             <p> 
                 <span class="large-text"> Кінокомпанія: </span>
-                <span class="medium-text"></span>
-            </p>
-            
-            <p> 
-                <span class="large-text"> Жанр: </span>
-                <span class="medium-text"></span>
+                <span class="medium-text" id="company"></span>
             </p>
 
             <p> 
                 <span class="large-text"> Автор сценарію: </span>
-                <span class="medium-text"></span>
+                <span class="medium-text" id="author"></span>
             </p>
 
             
@@ -71,15 +67,15 @@
   
       </section>
 
-<di class="video-container"v>
-      <video  id="native_video_player" controls width="640" height="360" jucontent = "center">
-        <source src="your_video_file.mp4" type="video/mp4">
-        Ваш браузер не підтримує відео елемент.
-    </video>
-</div>
 
-    
-  
+
+    <div id="player-container">
+      <video id="torrent-video" controls></video>
+  </div>
+
+  <input type="text" id="magnet-link" placeholder="Вставте магнет-посилання сюди">
+  <button onclick="playMagnet()">Відтворити</button>
+
   </main>
   
 </html>

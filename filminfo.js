@@ -1,3 +1,11 @@
+import WebTorrent from 'webtorrent'
+
+// Потім ви можете використовувати WebTorrent в вашому JavaScript коді
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -19,7 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (movieData) {
                 document.getElementById("movieTitle").textContent = `${movieData[1]}`;
                 document.getElementById("genre").textContent = `${movieData[2]}`;
-                document.getElementById("country").textContent = `Країна: ${movieData[3]}`;
+                document.getElementById("country").textContent = `${movieData[3]}`;
+                document.getElementById("company").textContent = `${movieData[4]}`;
+                document.getElementById("author").textContent = `${movieData[5]}`;
                 // Додайте інші поля за потребою
             } else {
                 alert("Фільм не знайдено!");
@@ -29,3 +39,5 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Помилка під час завантаження файлу:", error);
         });
 });
+
+
