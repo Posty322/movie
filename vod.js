@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
+    const id = urlParams.get("vod");
 
-    fetch("https://raw.githubusercontent.com/Posty322/movie/main/filminfo.csv")
+    if (id == films){
+      const cvsfile = "https://raw.githubusercontent.com/Posty322/movie/main/filminfo.csv"
+    }
+    if (id == serials){
+        const cvsfile = "2"
+      }
+    fetch(cvsfile)
         .then(response => response.text())
         .then(data => {
             const lines = data.split("\n");
@@ -31,5 +37,3 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Помилка під час завантаження файлу:", error);
         });
 });
-
-
